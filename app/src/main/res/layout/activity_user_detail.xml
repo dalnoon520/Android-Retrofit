@@ -7,25 +7,25 @@
     tools:context=".UserDetailActivity">
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintEnd_toStartOf="@+id/btnDelete"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:text="Delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button2" />
+        app:layout_constraintStart_toEndOf="@+id/btnSave" />
 
     <TextView
         android:id="@+id/idLabel"
@@ -83,8 +83,9 @@
         android:id="@+id/userId"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:ems="12"
+        android:text="0"
+        android:inputType="numberSigned"
         app:layout_constraintBaseline_toBaselineOf="@+id/idLabel"
         app:layout_constraintStart_toStartOf="@+id/guideline4" />
 
@@ -94,7 +95,6 @@
         android:layout_height="wrap_content"
         android:ems="12"
         android:inputType="textPersonName"
-        android:text="Name"
         app:layout_constraintBaseline_toBaselineOf="@+id/nameLabel"
         app:layout_constraintStart_toStartOf="@+id/guideline4" />
 
@@ -131,5 +131,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="40dp" />
+
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/btnDelete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userStatus" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

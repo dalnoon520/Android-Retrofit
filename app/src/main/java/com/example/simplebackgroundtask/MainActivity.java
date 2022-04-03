@@ -1,7 +1,7 @@
 package com.example.simplebackgroundtask;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,18 +19,15 @@ import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Converter;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    ArrayList<User> mWordList = new ArrayList<>();
     private TextView mTextView;
     private RecyclerView mRecyclerView;
     private ProgressBar progressBar;
     private UserListAdapter mAdapter;
-    ArrayList<User> mWordList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +42,13 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        findViewById(R.id.btnRefresh).callOnClick();
+
+        findViewById(R.id.btnCreate).setOnClickListener(view -> {
+            Intent intent = new Intent(this, UserDetailActivity.class);
+            intent.putExtra("userId", 0);
+            startActivity(intent);
+        });
     }
 
     public void startTask(View view) {
@@ -52,44 +56,22 @@ public class MainActivity extends AppCompatActivity {
         mWordList.clear();
         mTextView.setText(R.string.loading);
         progressBar.setVisibility(View.VISIBLE);
-
-        User user = new User();
-        user.name = "ndfasdx";
-        user.email = "sdfszx@morissette.io";
-        user.gender = "male";
-        user.status = "active";
-        ApiClient.getAPI().postUser(user).enqueue(new Callback<User>() {
+        ApiClient.getAPI().getAllUsers().enqueue(new Callback<ArrayList<User>>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                Log.d("POST", response.raw().toString());
-                mTextView.setText(String.valueOf(response.isSuccessful()));
+            public void onResponse(@NonNull Call<ArrayList<User>> call, @NonNull Response<ArrayList<User>> response) {
+                ArrayList<User> userList = response.body();
+                mTextView.setText("Number of Users: " + userList.size());
+                mWordList.addAll(userList);
+                mAdapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
                 view.setEnabled(true);
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                mTextView.setText(t.getMessage());
+            public void onFailure(@NonNull Call<ArrayList<User>> call, @NonNull Throwable t) {
+                mTextView.setText("Error:" + t.getMessage());
                 view.setEnabled(true);
-
             }
         });
-
-//        ApiClient.getAPI().getAllUsers().enqueue(new Callback<ArrayList<User>>() {
-//            @Override
-//            public void onResponse(@NonNull Call<ArrayList<User>> call, @NonNull Response<ArrayList<User>> response) {
-//                ArrayList<User> userList = response.body();
-//                mTextView.setText("Number of Users: " + userList.size());
-//                mWordList.addAll(userList);
-//                mAdapter.notifyDataSetChanged();
-//                progressBar.setVisibility(View.GONE);
-//                view.setEnabled(true);
-//            }
-//
-//            @Override
-//            public void onFailure(@NonNull Call<ArrayList<User>> call, @NonNull Throwable t) {
-//                mTextView.setText("Error:" + t.getMessage());
-//                view.setEnabled(true);
-//            }
-//        });
     }
 }
